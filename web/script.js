@@ -511,17 +511,27 @@ function showNotification(item, quantity) {
         </div>
     `;
 
-    const container = document.querySelector('.notifications');
+    let container = document.querySelector('.notifications');
     if (!container) {
-        const notifContainer = document.createElement('div');
-        notifContainer.className = 'notifications';
-        document.body.appendChild(notifContainer);
+        container = document.createElement('div');
+        container.className = 'notifications';
+        document.body.appendChild(container);
     }
 
-    document.querySelector('.notifications').appendChild(notification);
+    container.appendChild(notification);
+
+    const notificationRef = notification;
 
     setTimeout(() => {
-        notification.remove();
+        if (notificationRef && notificationRef.parentNode) {
+            try {
+                notificationRef.remove();
+            } catch (error) {
+                if (notificationRef.parentNode) {
+                    notificationRef.parentNode.removeChild(notificationRef);
+                }
+            }
+        }
     }, 3000);
 }
 

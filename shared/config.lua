@@ -71,6 +71,76 @@ Config.Items = {
     }
 }
 
+-- Ajouter après Config.Items et avant Config.Shops
+
+Config.Categories = {
+    {
+        id = "food",
+        label = "Nourriture",
+        icon = "fa-burger",
+        small = false
+    },
+    {
+        id = "drinks",
+        label = "Boissons",
+        icon = "fa-bottle-water",
+        small = false
+    },
+    {
+        id = "electronics",
+        label = "Électronique",
+        icon = "fa-mobile-screen",
+        small = false
+    },
+    {
+        id = "tools",
+        label = "Outils",
+        icon = "fa-hammer",
+        small = false,
+        locked = true
+    }
+    
+}
+
+-- Configuration des textes de l'interface
+Config.Text = {
+    title = "Supérette",
+    searchPlaceholder = "RECHERCHER UN ARTICLE"
+}
+
+-- Configuration des icônes
+Config.Icons = {
+    cartAdd = "fa-cart-plus",
+    lock = "fa-lock"
+}
+
+-- Configuration des couleurs et du style
+Config.Colors = {
+    primary = "rgb(0, 150, 136)",
+    primaryGradient = "rgb(0, 121, 107)",
+    background = "rgba(32, 32, 32, 0.95)",
+    categoryBg = "rgb(45, 45, 45)",
+    categoryHover = "rgb(55, 55, 55)",
+    text = "white",
+    locked = "rgba(32, 32, 32, 0.5)",
+    lockedText = "rgba(255, 255, 255, 0.5)"
+}
+
+Config.Style = {
+    borderRadius = "8px",
+    buttonRadius = "4px",
+    fontSize = {
+        small = "12px",
+        text = "13px",
+        notification = "14px"
+    },
+    spacing = {
+        notificationPadding = "12px 15px"
+    }
+}
+
+Config.Position = "top-right"
+
 --[[
     Configuration des emplacements des supérettes
     - pos: coordonnées de la supérette (x, y, z)
