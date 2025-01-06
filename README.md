@@ -115,6 +115,165 @@ Ce script est protégé par licence. Voir le fichier `LICENSE` pour plus de dét
 - Système de stock
 - Support multi-langues
 
+## 🔄 Futures Mises à Jour Détaillées
+
+### 1. Système de Promotions
+**Description :**
+- Promotions temporaires sur certains articles
+- Réductions en pourcentage ou prix fixe
+- Promotions limitées dans le temps
+- Promotions spéciales (2+1 gratuit, etc.)
+
+**Implémentation :**
+```lua
+Config.Promotions = {
+    {
+        type = "percentage", -- Type de promotion
+        value = 20, -- -20%
+        items = {"bread", "water"}, -- Articles concernés
+        startTime = "10:00", -- Heure de début
+        endTime = "18:00", -- Heure de fin
+        days = {1, 2, 3, 4, 5} -- Jours actifs (1 = Lundi)
+    },
+    {
+        type = "bundle", -- Promotion pack
+        items = {"cola"},
+        buyCount = 2, -- Acheter 2
+        freeCount = 1, -- En avoir 3
+        duration = 7 -- Durée en jours
+    }
+}
+```
+
+### 2. Interface Administrateur
+**Description :**
+- Gestion des prix en temps réel
+- Création/modification des promotions
+- Visualisation des statistiques
+- Gestion des stocks
+- Configuration des supérettes
+
+**Implémentation :**
+```lua
+-- Commande admin
+RegisterCommand("shop_admin", function(source)
+    if IsPlayerAdmin(source) then
+        TriggerClientEvent("at_shops:openAdminPanel", source, {
+            stats = GetShopStats(),
+            inventory = GetShopInventory(),
+            promotions = Config.Promotions
+        })
+    end
+end)
+```
+
+### 3. Statistiques de Vente
+**Description :**
+- Suivi des ventes par article/catégorie
+- Graphiques de performance
+- Heures de pointe
+- Articles les plus vendus
+- Revenus générés
+
+**Implémentation :**
+```sql
+-- Structure de la base de données
+CREATE TABLE shop_sales (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    item_id VARCHAR(50),
+    quantity INT,
+    price FLOAT,
+    payment_method VARCHAR(10),
+    timestamp DATETIME,
+    shop_id INT
+);
+
+-- Exemple de requête statistique
+SELECT 
+    item_id,
+    SUM(quantity) as total_sold,
+    SUM(quantity * price) as revenue,
+    DATE_FORMAT(timestamp, '%H:00') as hour
+FROM shop_sales
+GROUP BY item_id, hour
+ORDER BY revenue DESC;
+```
+
+### 4. Système de Stock
+**Description :**
+- Stock limité par article
+- Réapprovisionnement automatique
+- Alertes de stock bas
+- Système de commande pour les admins
+- Variations de prix selon le stock
+
+**Implémentation :**
+```lua
+Config.Inventory = {
+    ["bread"] = {
+        maxStock = 100, -- Stock maximum
+        restock = { -- Paramètres de réapprovisionnement
+            amount = 20, -- Quantité par réapprovisionnement
+            interval = 3600, -- Intervalle en secondes
+            minStock = 10 -- Seuil d'alerte
+        },
+        dynamicPricing = { -- Prix dynamique selon le stock
+            basePrice = 1,
+            maxIncrease = 0.5, -- +50% max
+            threshold = 20 -- % de stock restant
+        }
+    }
+}
+```
+
+### 5. Support Multi-langues
+**Description :**
+- Support de plusieurs langues
+- Détection automatique de la langue
+- Interface de traduction pour admins
+- Possibilité d'ajouter facilement des langues
+
+**Implémentation :**
+```lua
+Config.Locales = {
+    ['fr'] = {
+        ['shop_name'] = 'Supérette',
+        ['cart_empty'] = 'Votre panier est vide',
+        ['payment_success'] = 'Paiement accepté',
+        -- etc...
+    },
+    ['en'] = {
+        ['shop_name'] = 'Shop',
+        ['cart_empty'] = 'Your cart is empty',
+        ['payment_success'] = 'Payment accepted',
+        -- etc...
+    }
+}
+
+-- Système de traduction
+function _U(key, lang)
+    lang = lang or GetPlayerLocale()
+    return Config.Locales[lang][key] or key
+end
+```
+
+### Intégration Globale
+Toutes ces fonctionnalités seront :
+1. Accessibles via une interface admin unifiée
+2. Synchronisées en temps réel
+3. Sauvegardées dans une base de données
+4. Optimisées pour maintenir les performances
+5. Configurables via le fichier config.lua
+6. Sécurisées contre les exploits
+7. Documentées en détail
+
+### Impact sur les Performances
+- Utilisation de cache pour les données fréquentes
+- Mise à jour asynchrone des statistiques
+- Optimisation des requêtes SQL
+- Limitation des synchronisations réseau
+- Gestion intelligente des événements
+
 ## Image
 ![Menu principal](image.png)
 ![Dans une catégorie](image-1.png)
