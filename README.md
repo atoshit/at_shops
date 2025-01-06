@@ -1,5 +1,7 @@
 # 🏪 Système de Supérettes Optimisé pour FiveM
 
+[Help](https://discord.gg/atoshi)
+
 ## 📝 Description
 Un système de supérettes moderne et optimisé pour FiveM, offrant une interface utilisateur fluide et des performances exceptionnelles. Le script permet aux joueurs d'acheter divers articles dans des supérettes réparties sur la carte, avec un système de paiement en espèces ou par carte.
 
