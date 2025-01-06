@@ -16,6 +16,14 @@ author 'atoshi'
 version '1.0.0'
 description 'at_shops'
 
+ui_page 'web/index.html'
+
+files {
+    'web/index.html',
+    'web/style.css',
+    'web/script.js'
+}
+
 -- Shared scripts
 shared_scripts {
     'shared/*.lua'

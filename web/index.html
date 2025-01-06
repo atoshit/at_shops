@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supérette</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="banner">
+            <i class="fas fa-store"></i>
+            <h1>Supérette</h1>
+            <button class="close-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="content">
+            <div class="categories">
+                <div class="category" data-category="nourriture">
+                    <i class="fas fa-hamburger"></i>
+                    <span>NOURRITURE</span>
+                </div>
+                <div class="category" data-category="boissons">
+                    <i class="fas fa-wine-bottle"></i>
+                    <span>BOISSONS</span>
+                </div>
+                <div class="category" data-category="electronique">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>ÉLECTRONIQUE</span>
+                </div>
+                <div class="category-row">
+                    <div class="category small" data-category="outils">
+                        <i class="fas fa-tools"></i>
+                        <span>OUTILS</span>
+                    </div>
+                    <div class="category small" data-category="divers">
+                        <i class="fas fa-box-open"></i>
+                        <span>DIVERS</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-section">
+                <div class="search-bar">
+                    <input type="text" placeholder="RECHERCHER UN ARTICLE">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="listing-props">
+                    <button class="prop-btn"><i class="fas fa-shopping-cart"></i></button>
+                    <button class="prop-btn"><i class="fas fa-list"></i></button>
+                    <button class="prop-btn"><i class="fas fa-info-circle"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
