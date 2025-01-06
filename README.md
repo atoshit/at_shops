@@ -114,3 +114,11 @@ Ce script est protégé par licence. Voir le fichier `LICENSE` pour plus de dét
 - Statistiques de vente
 - Système de stock
 - Support multi-langues
+
+## Image
+![Menu principal](image.png)
+![Dans une catégorie](image-1.png)
+![Panier d'achat vide](image-2.png)
+![Panier d'achat rempli](image-3.png)
+![Notification](image-4.png)
+![Interface Payement](image-5.png)
