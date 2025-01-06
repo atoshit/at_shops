@@ -143,7 +143,20 @@ function closeUI() {
         document.body.style.display = 'none';
         container.style.animation = '';
         isClosing = false;
+        resetUIState();
     }, 150);
+}
+
+function resetUIState() {
+    cart = [];
+    currentView = 'main';
+    updateCartCount();
+    showView('main');
+    
+    const searchInput = document.querySelector('.search-bar input');
+    if (searchInput) {
+        searchInput.value = '';
+    }
 }
 
 window.addEventListener('message', function(event) {
@@ -153,6 +166,7 @@ window.addEventListener('message', function(event) {
         const container = document.querySelector('.container');
         document.body.style.display = 'block';
         container.style.animation = 'slideIn 0.2s ease-out';
+        resetUIState();
         initializeUI();
     } else if (event.data.type === 'closeShop') {
         closeUI();
