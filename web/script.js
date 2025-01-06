@@ -3,6 +3,7 @@ let isClosing = false;
 let currentView = 'main';
 let cart = [];
 let notifications = [];
+let allItems = [];
 
 function showView(viewName) {
     document.querySelector('.main-view').style.display = viewName === 'main' ? 'block' : 'none';
@@ -36,7 +37,7 @@ function createItemElement(item) {
                 ${item.price}$
             </div>
             <button class="add-to-cart">
-                <i class="fas fa-cart-plus"></i>
+                <i class="fas ${config.Icons.cartAdd}"></i>
             </button>
         </div>
     `;
@@ -87,7 +88,7 @@ function showItems(categoryId) {
 
 function createCategoryElement(category, small = false) {
     const div = document.createElement('div');
-    div.className = `category${small ? ' small' : ''}`;
+    div.className = `category${small ? ' small' : ''}${category.locked ? ' locked' : ''}`;
     div.dataset.category = category.id;
     
     const icon = document.createElement('i');
@@ -99,9 +100,16 @@ function createCategoryElement(category, small = false) {
     div.appendChild(icon);
     div.appendChild(span);
     
-    div.addEventListener('click', () => {
-        showItems(category.id);
-    });
+    if (category.locked) {
+        const lockIcon = document.createElement('i');
+        lockIcon.className = `fas ${config.Icons.lock}`;
+        lockIcon.classList.add('lock-icon');
+        div.appendChild(lockIcon);
+    } else {
+        div.addEventListener('click', () => {
+            showItems(category.id);
+        });
+    }
     
     return div;
 }
@@ -155,6 +163,8 @@ function initializeUI() {
     if (!config) return;
 
     document.querySelector('.banner h1').textContent = config.Text.title;
+    
+    allItems = Object.values(config.Items).flat();
 
     const categoriesContainer = document.querySelector('.categories');
     categoriesContainer.innerHTML = ''; 
@@ -177,6 +187,44 @@ function initializeUI() {
     document.querySelector('.search-bar input').placeholder = config.Text.searchPlaceholder;
 
     applyStyles();
+
+    const searchInput = document.querySelector('.search-bar input');
+    const searchBtn = document.querySelector('.search-btn');
+
+    function performSearch() {
+        const searchTerm = searchInput.value.trim().toLowerCase();
+        if (searchTerm === '') return;
+
+        const foundItems = allItems.filter(item => 
+            item.label.toLowerCase().includes(searchTerm)
+        );
+
+        const itemsGrid = document.querySelector('.items-grid');
+        itemsGrid.innerHTML = '';
+
+        if (foundItems.length === 0) {
+            itemsGrid.innerHTML = `
+                <div class="search-no-results">
+                    <i class="fas fa-search"></i>
+                    <p>Aucun article trouvé pour "${searchInput.value}"</p>
+                </div>
+            `;
+        } else {
+            foundItems.forEach(item => {
+                itemsGrid.appendChild(createItemElement(item));
+            });
+        }
+
+        document.querySelector('.items-view h2').textContent = 'Résultats de recherche';
+        showView('items');
+    }
+
+    searchBtn.addEventListener('click', performSearch);
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            performSearch();
+        }
+    });
 }
 
 function applyStyles() {
@@ -253,6 +301,35 @@ function applyStyles() {
         }
         .category i {
             color: ${config.Colors.primary};
+        }
+        .search-no-results {
+            color: ${config.Colors.text};
+            font-size: ${config.Style.fontSize.text};
+        }
+        .notification {
+            background: ${config.Colors.primary};
+            padding: ${config.Style.spacing.notificationPadding};
+            font-size: ${config.Style.fontSize.notification};
+        }
+        .category.locked {
+            background-color: ${config.Colors.locked};
+            cursor: not-allowed;
+            position: relative;
+        }
+
+        .category.locked i:not(.lock-icon) {
+            opacity: 0.5;
+        }
+
+        .category.locked span {
+            color: ${config.Colors.lockedText} !important;
+        }
+
+        .lock-icon {
+            position: absolute;
+            right: 15px;
+            color: ${config.Colors.lockedText};
+            font-size: ${config.Style.fontSize.small};
         }
         /* ... autres styles ... */
     `;
