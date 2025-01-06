@@ -170,6 +170,52 @@ window.addEventListener('message', function(event) {
         initializeUI();
     } else if (event.data.type === 'closeShop') {
         closeUI();
+    } else if (event.data.type === 'paymentSuccessful') {
+        if (document.querySelector('.tpe-overlay')) {
+            document.querySelector('.tpe-message').textContent = 'Paiement accepté';
+            document.querySelector('.tpe-animation i').className = 'fas fa-check';
+            document.querySelector('.tpe-container').classList.add('success');
+            
+            setTimeout(() => {
+                document.querySelector('.tpe-overlay').remove();
+                document.body.style.display = 'none';
+                fetch(`https://${GetParentResourceName()}/closeUI`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+            }, 1500);
+        } else {
+            document.body.style.display = 'none';
+            fetch(`https://${GetParentResourceName()}/closeUI`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            });
+        }
+    } else if (event.data.type === 'paymentFailed') {
+        if (event.data.method === 'card' && document.querySelector('.tpe-overlay')) {
+            document.querySelector('.tpe-message').textContent = 'Paiement refusé';
+            document.querySelector('.tpe-animation i').className = 'fas fa-times';
+            document.querySelector('.tpe-container').classList.add('failed');
+            
+            setTimeout(() => {
+                document.querySelector('.tpe-overlay').remove();
+                showView('main');
+            }, 1500);
+        } else {
+            const notification = document.createElement('div');
+            notification.className = 'notification error';
+            notification.innerHTML = `
+                <i class="fas fa-times"></i>
+                <div class="notification-content">
+                    <div class="notification-title">Paiement refusé</div>
+                    <div class="notification-details">Fonds insuffisants</div>
+                </div>
+            `;
+            document.querySelector('.notifications').appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
     }
 });
 
@@ -442,6 +488,7 @@ document.querySelector('.pay-cash').addEventListener('click', () => {
 
 document.querySelector('.pay-card').addEventListener('click', () => {
     if (cart.length === 0) return;
+    showTPEProcess();
     fetch(`https://${GetParentResourceName()}/payCart`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -476,4 +523,75 @@ function showNotification(item, quantity) {
     setTimeout(() => {
         notification.remove();
     }, 3000);
-} 
+}
+
+function showTPEProcess() {
+    const tpeOverlay = document.createElement('div');
+    tpeOverlay.className = 'tpe-overlay';
+    tpeOverlay.innerHTML = `
+        <div class="tpe-container">
+            <div class="tpe-screen">
+                <div class="tpe-animation">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="tpe-message">Contact avec l'émetteur...</div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(tpeOverlay);
+    
+    setTimeout(() => {
+        document.querySelector('.tpe-message').textContent = 'Paiement en cours...';
+    }, 1000);
+}
+
+window.addEventListener('message', function(event) {
+    if (event.data.type === 'paymentSuccessful') {
+        if (document.querySelector('.tpe-overlay')) {
+            document.querySelector('.tpe-message').textContent = 'Paiement accepté';
+            document.querySelector('.tpe-animation i').className = 'fas fa-check';
+            document.querySelector('.tpe-container').classList.add('success');
+            
+            setTimeout(() => {
+                document.querySelector('.tpe-overlay').remove();
+                document.body.style.display = 'none';
+                fetch(`https://${GetParentResourceName()}/closeUI`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+            }, 1500);
+        } else {
+            document.body.style.display = 'none';
+            fetch(`https://${GetParentResourceName()}/closeUI`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            });
+        }
+    } else if (event.data.type === 'paymentFailed') {
+        if (event.data.method === 'card') {
+            document.querySelector('.tpe-message').textContent = 'Paiement refusé';
+            document.querySelector('.tpe-animation i').className = 'fas fa-times';
+            document.querySelector('.tpe-container').classList.add('failed');
+            
+            setTimeout(() => {
+                document.querySelector('.tpe-overlay').remove();
+                showView('main');
+            }, 1500);
+        } else {
+            // Message pour paiement en espèces refusé
+            const notification = document.createElement('div');
+            notification.className = 'notification error';
+            notification.innerHTML = `
+                <i class="fas fa-times"></i>
+                <div class="notification-content">
+                    <div class="notification-title">Paiement refusé</div>
+                    <div class="notification-details">Fonds insuffisants</div>
+                </div>
+            `;
+            document.querySelector('.notifications').appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+    }
+}); 

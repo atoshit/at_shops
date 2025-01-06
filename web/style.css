@@ -144,8 +144,9 @@ body {
     align-items: center;
     gap: 12px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.2s;
     color: white;
+    transform: translateY(0);
 }
 
 .category i {
@@ -164,6 +165,7 @@ body {
 
 .category:hover {
     background-color: rgb(55, 55, 55);
+    transform: translateY(-2px);
 }
 
 .category-row {
@@ -190,6 +192,7 @@ body {
     border-radius: 4px;
     font-size: 13px;
     font-family: 'Poppins', sans-serif;
+    transition: background-color 0.2s, box-shadow 0.2s;
 }
 
 .search-bar input::placeholder {
@@ -204,6 +207,7 @@ body {
     width: 35px;
     color: white;
     cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
 }
 
 .listing-props {
@@ -219,7 +223,7 @@ body {
     border-radius: 4px;
     color: rgb(0, 150, 136);
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
 .prop-btn:hover {
@@ -255,6 +259,7 @@ input:focus, button:focus {
 
 .items-view, .cart-view {
     display: none;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .items-header, .cart-header {
@@ -278,6 +283,7 @@ input:focus, button:focus {
     border-radius: 4px;
     display: flex;
     flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 /* Partie supérieure de la carte */
@@ -350,6 +356,7 @@ input:focus, button:focus {
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.3);
     margin-left: 1px;
+    transition: transform 0.2s, opacity 0.2s;
 }
 
 .add-to-cart:hover {
@@ -369,6 +376,7 @@ input:focus, button:focus {
     display: flex;
     align-items: center;
     justify-content: center;
+    animation: bounce 0.3s cubic-bezier(0.36, 0, 0.66, -0.56);
 }
 
 #cart-btn {
@@ -405,6 +413,7 @@ input:focus, button:focus {
     align-items: center;
     gap: 12px;
     margin-bottom: 8px;
+    animation: slideInItem 0.3s ease-out;
 }
 
 .cart-item:last-child {
@@ -460,6 +469,7 @@ input:focus, button:focus {
     justify-content: center;
     width: 20px;
     height: 20px;
+    transition: transform 0.2s, opacity 0.2s;
 }
 
 .remove-item {
@@ -518,7 +528,7 @@ input:focus, button:focus {
     cursor: pointer;
     font-weight: 500;
     font-size: 13px;
-    transition: opacity 0.2s;
+    transition: transform 0.2s, opacity 0.2s;
 }
 
 .pay-cash {
@@ -590,9 +600,10 @@ input:focus, button:focus {
     display: flex;
     align-items: center;
     gap: 12px;
-    animation: slideInNotifLeft 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards;
+    animation: slideInNotif 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards;
     pointer-events: none;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transform-origin: top right;
 }
 
 .notification i {
@@ -614,14 +625,14 @@ input:focus, button:focus {
     opacity: 0.9;
 }
 
-@keyframes slideInNotifLeft {
+@keyframes slideInNotif {
     from {
-        transform: translateY(-20px);
         opacity: 0;
+        transform: translateY(20px) scale(0.95);
     }
     to {
-        transform: translateY(0);
         opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 
@@ -715,4 +726,161 @@ input:focus, button:focus {
     right: 15px;
     color: ${config.Colors.lockedText};
     font-size: ${config.Style.fontSize.small};
-} 
+}
+
+/* Animation pour les items */
+.item-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Animation des boutons */
+.add-to-cart:hover, .quantity-btn:hover, .search-btn:hover, .prop-btn:hover {
+    transform: scale(1.1);
+}
+
+.remove-item:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Animation des vues */
+.items-view, .cart-view {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animation du panier */
+.cart-item {
+    animation: slideInItem 0.3s ease-out;
+}
+
+@keyframes slideInItem {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Animation des boutons de paiement */
+.payment-methods button {
+    /* ... styles existants ... */
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.payment-methods button:hover {
+    transform: translateY(-2px);
+}
+
+/* Animation de la barre de recherche */
+.search-bar input {
+    /* ... styles existants ... */
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.search-bar input:focus {
+    box-shadow: 0 0 0 2px rgba(0, 150, 136, 0.3);
+}
+
+/* Animation pour le compteur du panier */
+.cart-count {
+    /* ... styles existants ... */
+    animation: bounce 0.3s cubic-bezier(0.36, 0, 0.66, -0.56);
+}
+
+@keyframes bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+/* Animation des notifications plus fluide */
+.notification {
+    /* ... styles existants ... */
+    animation: slideInNotif 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards;
+    transform-origin: top right;
+}
+
+@keyframes slideInNotif {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.tpe-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.tpe-container {
+    background: rgb(35, 35, 35);
+    border-radius: 8px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.tpe-screen {
+    text-align: center;
+    color: white;
+}
+
+.tpe-animation {
+    margin-bottom: 15px;
+}
+
+.tpe-animation i {
+    font-size: 40px;
+    color: rgb(0, 150, 136);
+    animation: pulse 1.5s infinite;
+}
+
+.tpe-message {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.tpe-container.success .tpe-animation i {
+    color: #4CAF50;
+    animation: none;
+}
+
+.tpe-container.failed .tpe-animation i {
+    color: #f44336;
+    animation: none;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.notification.error {
+    background: rgba(244, 67, 54, 0.95);
+}
