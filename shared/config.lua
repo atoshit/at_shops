@@ -133,7 +133,6 @@ Config.Icons = {
     lock = "fa-lock"
 }
 
-
 -- Configuration des couleurs et du style
 Config.Colors = {
     primary = "rgb(0, 150, 136)",
