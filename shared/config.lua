@@ -71,33 +71,52 @@ Config.Items = {
     }
 }
 
--- Ajouter après Config.Items et avant Config.Shops
-
+--[[
+    Configuration des catégories disponibles dans les supérettes
+    Structure:
+    - Chaque catégorie est une table avec un nom unique (food, drinks, etc.)
+    - Chaque catégorie doit avoir:
+        - id: identifiant unique correspondant à la catégorie
+        - label: nom affiché dans le menu
+        - icon: icône FontAwesome (sans le "fa-")
+        - small: si true, la catégorie sera affiché en petit
+        - locked: si true, la catégorie sera verrouillé et ne pourra pas être acheté
+]]
 Config.Categories = {
     {
         id = "food",
         label = "Nourriture",
         icon = "fa-burger",
-        small = false
+        small = false,
+        locked = false
     },
     {
         id = "drinks",
         label = "Boissons",
         icon = "fa-bottle-water",
-        small = false
+        small = false,
+        locked = false
     },
     {
         id = "electronics",
         label = "Électronique",
         icon = "fa-mobile-screen",
-        small = false
+        small = false,
+        locked = false
     },
     {
         id = "tools",
         label = "Outils",
         icon = "fa-hammer",
-        small = false,
+        small = true,
         locked = true
+    },
+    {
+        id = "misc",
+        label = "Divers",
+        icon = "fa-question",
+        small = true,
+        locked = false
     }
     
 }
@@ -113,6 +132,7 @@ Config.Icons = {
     cartAdd = "fa-cart-plus",
     lock = "fa-lock"
 }
+
 
 -- Configuration des couleurs et du style
 Config.Colors = {
