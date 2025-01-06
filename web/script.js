@@ -1,5 +1,120 @@
 let config = null;
 let isClosing = false;
+let currentView = 'main';
+let cart = [];
+let notifications = [];
+
+function showView(viewName) {
+    document.querySelector('.main-view').style.display = viewName === 'main' ? 'block' : 'none';
+    document.querySelector('.items-view').style.display = viewName === 'items' ? 'block' : 'none';
+    document.querySelector('.cart-view').style.display = viewName === 'cart' ? 'block' : 'none';
+    
+    if (viewName === 'cart') {
+        updateCartView();
+    }
+    
+    currentView = viewName;
+}
+
+function createItemElement(item) {
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'item-card';
+    itemDiv.innerHTML = `
+        <div class="item-top">
+            <div class="item-icon">
+                <i class="fas ${item.icon}"></i>
+            </div>
+            <div class="item-info">
+                <h3>${item.label}</h3>
+            </div>
+        </div>
+        <div class="item-bottom">
+            <div class="quantity-container">
+                <input type="number" min="1" value="1" class="item-quantity">
+            </div>
+            <div class="price-container">
+                ${item.price}$
+            </div>
+            <button class="add-to-cart">
+                <i class="fas fa-cart-plus"></i>
+            </button>
+        </div>
+    `;
+
+    const addButton = itemDiv.querySelector('.add-to-cart');
+    const quantityInput = itemDiv.querySelector('.item-quantity');
+
+    addButton.addEventListener('click', () => {
+        const quantity = parseInt(quantityInput.value);
+        addToCart(item, quantity);
+    });
+
+    return itemDiv;
+}
+
+function addToCart(item, quantity) {
+    const existingItem = cart.find(i => i.id === item.id);
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        cart.push({ ...item, quantity });
+    }
+    updateCartCount();
+    showNotification(item, quantity);
+}
+
+function updateCartCount() {
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    document.querySelector('.cart-count').textContent = count;
+}
+
+function showItems(categoryId) {
+    const items = config.Items[categoryId];
+    if (!items) return;
+
+    const itemsGrid = document.querySelector('.items-grid');
+    itemsGrid.innerHTML = '';
+    
+    items.forEach(item => {
+        itemsGrid.appendChild(createItemElement(item));
+    });
+
+    const categoryLabel = config.Categories.find(cat => cat.id === categoryId)?.label || 'Catégorie';
+    document.querySelector('.items-view h2').textContent = categoryLabel;
+
+    showView('items');
+}
+
+function createCategoryElement(category, small = false) {
+    const div = document.createElement('div');
+    div.className = `category${small ? ' small' : ''}`;
+    div.dataset.category = category.id;
+    
+    const icon = document.createElement('i');
+    icon.className = `fas ${category.icon}`;
+    
+    const span = document.createElement('span');
+    span.textContent = category.label;
+    
+    div.appendChild(icon);
+    div.appendChild(span);
+    
+    div.addEventListener('click', () => {
+        showItems(category.id);
+    });
+    
+    return div;
+}
+
+document.querySelectorAll('.back-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        showView('main');
+    });
+});
+
+document.getElementById('cart-btn').addEventListener('click', () => {
+    showView('cart');
+});
 
 function closeUI() {
     if (isClosing) return;
@@ -62,31 +177,6 @@ function initializeUI() {
     document.querySelector('.search-bar input').placeholder = config.Text.searchPlaceholder;
 
     applyStyles();
-}
-
-function createCategoryElement(category, small = false) {
-    const div = document.createElement('div');
-    div.className = `category${small ? ' small' : ''}`;
-    div.dataset.category = category.id;
-    
-    const icon = document.createElement('i');
-    icon.className = `fas ${category.icon}`;
-    
-    const span = document.createElement('span');
-    span.textContent = category.label;
-    
-    div.appendChild(icon);
-    div.appendChild(span);
-    
-    div.addEventListener('click', () => {
-        fetch(`https://${GetParentResourceName()}/selectCategory`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ category: category.id })
-        });
-    });
-    
-    return div;
 }
 
 function applyStyles() {
@@ -176,3 +266,123 @@ document.addEventListener('keydown', function(event) {
 });
 
 document.querySelector('.close-btn').addEventListener('click', closeUI); 
+
+function updateCartView() {
+    const cartItems = document.querySelector('.cart-items');
+    const cartFooter = document.querySelector('.cart-footer');
+    cartItems.innerHTML = '';
+    let total = 0;
+
+    if (cart.length === 0) {
+        cartItems.innerHTML = `
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Votre panier est vide</p>
+            </div>
+        `;
+        cartFooter.style.display = 'none';
+        return;
+    }
+
+    cartFooter.style.display = 'block';
+    
+    cart.forEach(item => {
+        const cartItem = document.createElement('div');
+        cartItem.className = 'cart-item';
+        cartItem.innerHTML = `
+            <div class="item-icon">
+                <i class="fas ${item.icon}"></i>
+            </div>
+            <div class="cart-item-info">
+                <h3>${item.label}</h3>
+                <span class="item-price">${item.price}$</span>
+            </div>
+            <div class="cart-item-actions">
+                <div class="cart-item-quantity">
+                    <button class="quantity-btn minus">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <span>${item.quantity}</span>
+                    <button class="quantity-btn plus">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <button class="remove-item">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `;
+
+        cartItem.querySelector('.minus').addEventListener('click', () => {
+            if (item.quantity > 1) {
+                item.quantity--;
+                updateCartView();
+                updateCartCount();
+            }
+        });
+
+        cartItem.querySelector('.plus').addEventListener('click', () => {
+            item.quantity++;
+            updateCartView();
+            updateCartCount();
+        });
+
+        cartItem.querySelector('.remove-item').addEventListener('click', () => {
+            cart = cart.filter(i => i.id !== item.id);
+            updateCartView();
+            updateCartCount();
+        });
+
+        total += item.price * item.quantity;
+        cartItems.appendChild(cartItem);
+    });
+
+    document.querySelector('.total-amount').textContent = `${total}$`;
+}
+
+document.querySelector('.pay-cash').addEventListener('click', () => {
+    if (cart.length === 0) return;
+    fetch(`https://${GetParentResourceName()}/payCart`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ method: 'cash', items: cart })
+    });
+});
+
+document.querySelector('.pay-card').addEventListener('click', () => {
+    if (cart.length === 0) return;
+    fetch(`https://${GetParentResourceName()}/payCart`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ method: 'card', items: cart })
+    });
+});
+
+function showNotification(item, quantity) {
+    const total = item.price * quantity;
+    
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.innerHTML = `
+        <i class="fas fa-cart-plus"></i>
+        <div class="notification-content">
+            <div class="notification-title">Ajouté au panier</div>
+            <div class="notification-details">
+                ${quantity}x ${item.label} - Total: ${total}$
+            </div>
+        </div>
+    `;
+
+    const container = document.querySelector('.notifications');
+    if (!container) {
+        const notifContainer = document.createElement('div');
+        notifContainer.className = 'notifications';
+        document.body.appendChild(notifContainer);
+    }
+
+    document.querySelector('.notifications').appendChild(notification);
+
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+} 

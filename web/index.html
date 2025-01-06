@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="notifications"></div>
     <div class="container">
         <div class="banner">
             <i class="fas fa-store"></i>
@@ -19,40 +20,53 @@
         </div>
         
         <div class="content">
-            <div class="categories">
-                <div class="category" data-category="nourriture">
-                    <i class="fas fa-hamburger"></i>
-                    <span>NOURRITURE</span>
+            <div class="main-view">
+                <div class="categories">
                 </div>
-                <div class="category" data-category="boissons">
-                    <i class="fas fa-wine-bottle"></i>
-                    <span>BOISSONS</span>
-                </div>
-                <div class="category" data-category="electronique">
-                    <i class="fas fa-mobile-alt"></i>
-                    <span>ÉLECTRONIQUE</span>
-                </div>
-                <div class="category-row">
-                    <div class="category small" data-category="outils">
-                        <i class="fas fa-tools"></i>
-                        <span>OUTILS</span>
+
+                <div class="search-section">
+                    <div class="search-bar">
+                        <input type="text" placeholder="RECHERCHER UN ARTICLE">
+                        <button class="search-btn"><i class="fas fa-search"></i></button>
                     </div>
-                    <div class="category small" data-category="divers">
-                        <i class="fas fa-box-open"></i>
-                        <span>DIVERS</span>
+                    <div class="listing-props">
+                        <button class="prop-btn" id="cart-btn">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count">0</span>
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <div class="search-section">
-                <div class="search-bar">
-                    <input type="text" placeholder="RECHERCHER UN ARTICLE">
-                    <button class="search-btn"><i class="fas fa-search"></i></button>
+            <div class="items-view" style="display: none;">
+                <div class="items-header">
+                    <button class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Catégorie</h2>
                 </div>
-                <div class="listing-props">
-                    <button class="prop-btn"><i class="fas fa-shopping-cart"></i></button>
-                    <button class="prop-btn"><i class="fas fa-list"></i></button>
-                    <button class="prop-btn"><i class="fas fa-info-circle"></i></button>
+                <div class="items-grid">
+                </div>
+            </div>
+
+            <div class="cart-view" style="display: none;">
+                <div class="cart-header">
+                    <button class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Panier</h2>
+                </div>
+                <div class="cart-items">
+                </div>
+                <div class="cart-footer">
+                    <div class="cart-total">
+                        <span>Total:</span>
+                        <span class="total-amount">0$</span>
+                    </div>
+                    <div class="payment-methods">
+                        <button class="pay-cash">Payer en espèces</button>
+                        <button class="pay-card">Payer par carte</button>
+                    </div>
                 </div>
             </div>
         </div>

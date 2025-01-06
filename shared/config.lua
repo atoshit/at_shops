@@ -59,4 +59,48 @@ Config.Categories = {
 Config.Text = {
     title = "Supérette",
     searchPlaceholder = "RECHERCHER UN ARTICLE"
+}
+
+Config.Items = {
+    food = {
+        {
+            id = "bread",
+            label = "Pain",
+            price = 1,
+            icon = "fa-bread-slice",
+            description = "Du pain frais"
+        },
+        {
+            id = "water",
+            label = "Eau",
+            price = 1,
+            icon = "fa-bottle-water",
+            description = "Bouteille d'eau"
+        },
+    },
+    drinks = {
+        {
+            id = "cola",
+            label = "Cola",
+            price = 2,
+            icon = "fa-bottle-droplet",
+            description = "Une boisson rafraîchissante"
+        },
+    },
+    electronics = {
+        {
+            id = "phone",
+            label = "Téléphone",
+            price = 750,
+            icon = "fa-mobile-screen",
+            description = "Un téléphone portable"
+        },
+        {
+            id = "radio",
+            label = "Radio",
+            price = 250,
+            icon = "fa-walkie-talkie",
+            description = "Une radio portable"
+        },
+    }
 } 
