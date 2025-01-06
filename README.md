@@ -59,7 +59,7 @@ Config.Items = {
 - Nettoyage automatique des sessions inactives
 
 ## 🔧 Dépendances
-- es_extended
+- [es_extended](https://github.com/esx-framework/esx_core)
 - Font Awesome 6 (inclus)
 
 ## ⚡ Optimisations
